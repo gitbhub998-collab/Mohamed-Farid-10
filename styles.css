@@ -166,6 +166,14 @@
 	grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+.contact-item:nth-child(3n) {
+	border-right: 1px solid #333;
+}
+
+.contact-item:nth-child(2n) {
+	border-right: 0;
+}
+
 .menu-panel {
 	z-index: 130;
 }

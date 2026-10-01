@@ -2,13 +2,40 @@ const $=s=>document.querySelector(s);
 const $$=s=>document.querySelectorAll(s);
 
 const loader=$('#loader'), pct=$('#percent'), bar=$('#loading-bar');
-let progress=0;
-const loadTimer=setInterval(()=>{
-  progress+=Math.floor(Math.random()*9)+5;
-  if(progress>=100){progress=100;clearInterval(loadTimer);setTimeout(()=>loader.remove(),280)}
-  pct.textContent=progress+'%';
-  bar.style.width=progress+'%';
-},55);
+
+if(loader && pct && bar){
+  let progress=0;
+  let loadTimer=null;
+
+  const setProgress=(value)=>{
+    progress=Math.min(Math.max(value,0),100);
+    pct.textContent=Math.round(progress)+'%';
+    bar.style.width=progress+'%';
+  };
+
+  const finishLoader=()=>{
+    setProgress(100);
+    clearInterval(loadTimer);
+    loader.classList.add('is-hidden');
+    setTimeout(()=>loader.remove(),380);
+  };
+
+  loadTimer=setInterval(()=>{
+    if(progress >= 100) return;
+
+    const step=Math.random()*10+8;
+    setProgress(progress + step);
+
+    if(progress >= 100){
+      finishLoader();
+    }
+  },70);
+
+  window.addEventListener('load', finishLoader, { once: true });
+  setTimeout(()=>{
+    if(progress < 100) finishLoader();
+  }, 2200);
+}
 
 const currentYear=$('#currentYear');
 if(currentYear) currentYear.textContent=new Date().getFullYear();
